@@ -1,9 +1,26 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import App from './App';
+import React from "react";
+import { ClassVersion } from "./ClassVersion";
+import { DirectFn } from "./DirectFn";
+import { IdiomaticFn } from "./IdiomaticFn";
+import { render, getByLabelText, fireEvent } from "@testing-library/react";
 
-test('renders learn react link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+describe("Todo component tests", () => {
+  [ClassVersion, DirectFn, IdiomaticFn].map(Todo => {
+    describe(`Testing: ${Todo.name}`, () => {
+      it("should show a list of (default) todos", () => {
+        const { getByText } = render(<Todo />);
+        expect(getByText(/get some milk/i)).toBeInTheDocument();
+      });
+
+      it("should show an add todos button with a working input", () => {
+        const { getByLabelText, getByText } = render(<Todo />);
+        expect(getByLabelText(/todo label/i)).toBeInTheDocument();
+        const value = "some new label";
+        fireEvent.change(getByLabelText(/todo label/i), { target: { value } });
+        fireEvent.click(getByText(/add todo/i));
+        expect(getByLabelText(/todo label/i).value).toEqual("");
+        expect(getByText(value)).toBeInTheDocument();
+      });
+    });
+  });
 });

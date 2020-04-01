@@ -1,31 +1,38 @@
 import React, { useState, useReducer } from "react";
-import { initialState } from "./initialState";
+import { initialState as initialTodos } from "./initialState";
 
-export function DirectFn() {
-  const [todos, dispatch] = useReducer(todoReducer, initialState);
-  const [newInputVal, setNewInputVal] = useState("");
+const initialState = {
+  todos: initialTodos,
+  inputVal: ""
+};
+
+export function IdiomaticFn() {
+  const [{ todos, inputVal }, dispatch] = useReducer(todoReducer, initialState);
 
   const addNewTodo = e => {
     e.preventDefault();
     dispatch({
-        type: 'todos/add',
-        newInputVal
-    })
-    setNewInputVal(newInputVal);
+      type: "todo/add",
+      payload: inputVal
+    });
   };
 
   return (
     <div>
       <ul>
         {todos.map(({ label }) => (
-          <li>{label}</li>
+          <li key={label}>{label}</li>
         ))}
       </ul>
       <div style={{ display: "flex" }}>
+        <label htmlFor="newInput">Todo label</label>
         <input
+          id="newInput"
           placeholder="label"
-          value={newInputVal}
-          onChange={e => setNewInputVal(e.target.value)}
+          value={inputVal}
+          onChange={e =>
+            dispatch({ type: "input-change", payload: e.target.value })
+          }
         />
         <button onClick={addNewTodo}>add todo</button>
       </div>
@@ -34,9 +41,16 @@ export function DirectFn() {
 }
 
 function todoReducer(state, { type, payload }) {
+  const { todos, inputVal } = state;
+
   switch (type) {
     case "todo/add":
-      return [...state, { label: payload }];
+      return { ...state, todos: [...todos, { label: payload }], inputVal: "" };
+    case "input-change":
+      return {
+        ...state,
+        inputVal: payload
+      };
     default:
       return state;
   }

@@ -14,18 +14,21 @@ export function DirectFn() {
     e.preventDefault();
     const newTodos = [...todos, { label: newInputVal }];
     setTodos(newTodos);
-    setNewInputVal(newInputVal);
+    setNewInputVal('');
   };
 
   return (
     <div>
       <ul>
         {todos.map(({ label }) => (
-          <li>{label}</li>
+          <li key={label}>{label}</li>
         ))}
       </ul>
       <div style={{ display: "flex" }}>
+        <label htmlFor="newInput">Todo label</label>
+
         <input
+          id="newInput"
           placeholder="label"
           value={newInputVal}
           onChange={onChangeNewInputVal}

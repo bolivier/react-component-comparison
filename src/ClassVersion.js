@@ -1,5 +1,5 @@
 import React from "react";
-import { initialState } from './initialState';
+import { initialState } from "./initialState";
 
 export class ClassVersion extends React.Component {
   state = { todos: initialState, newInputVal: "" };
@@ -23,11 +23,13 @@ export class ClassVersion extends React.Component {
       <div>
         <ul>
           {this.state.todos.map(({ label }) => (
-            <li>{label}</li>
+            <li key={label}>{label}</li>
           ))}
         </ul>
         <div style={{ display: "flex" }}>
+          <label htmlFor="newInput">Todo label</label>
           <input
+            id="newInput"
             placeholder="label"
             value={this.state.newInputVal}
             onChange={this.onChangeNewInputVal}
