@@ -1,10 +1,11 @@
 import React from "react";
 import { ClassVersion } from "./ClassVersion";
+import { DirectFn } from './DirectFn';
 
 
 const components = {
   CLASS: ClassVersion,
-  DIRECT_FN: () => <span>not implemented</span>,
+  DIRECT_FN: DirectFn,
   IDIOMATIC_FN: () => <span>not implemented</span>
 };
 
@@ -35,7 +36,8 @@ function App() {
               border: "solid 1px black",
               padding: "5px",
               marginRight: "5px",
-              borderRadius: "2px"
+              borderRadius: "2px",
+              boxShadow: current === key ? 'inset 0 0 5px black' : '0 0 5px black'
             }}
             onClick={() => setCurrent(key)}
           >
