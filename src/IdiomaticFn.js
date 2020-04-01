@@ -21,7 +21,9 @@ export function IdiomaticFn() {
             key={id}
           >
             style={{ textDecoration: completed ? "line-through" : "none" }}
-            <span>{label}</span>
+            >
+              {label}
+            </span>
             <button
               data-testid={id}
               onClick={neutralizeEvent(() => {
