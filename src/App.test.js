@@ -21,6 +21,12 @@ describe("Todo component tests", () => {
         expect(getByLabelText(/todo label/i).value).toEqual("");
         expect(getByText(value)).toBeInTheDocument();
       });
+
+      it('should be able to delete todos', () => {
+        const { queryByText } = render(<Todo />);
+        fireEvent.click(queryByText(/get some milk/i))
+        expect(queryByText(/get some milk/i)).not.toBeInTheDocument();
+      });
     });
   });
 });

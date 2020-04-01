@@ -1,4 +1,4 @@
 export const initialState = [
-  { label: "Get some milk" },
-  { label: "Go to work" }
+  { id: 1, label: "Get some milk" },
+  { id: 2, label: "Go to work" }
 ];

@@ -18,12 +18,19 @@ export class ClassVersion extends React.Component {
     });
   };
 
+  removeTodo = id => {
+    const newTodos = this.state.todos.filter(todo => todo.id !== id);
+    this.setState({ todos: newTodos });
+  };
+
   render() {
     return (
       <div>
         <ul>
-          {this.state.todos.map(({ label }) => (
-            <li key={label}>{label}</li>
+          {this.state.todos.map(({ label, id }) => (
+            <li onClick={() => this.removeTodo(id)} key={id}>
+              {label}
+            </li>
           ))}
         </ul>
         <div style={{ display: "flex" }}>

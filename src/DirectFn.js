@@ -14,14 +14,21 @@ export function DirectFn() {
     e.preventDefault();
     const newTodos = [...todos, { label: newInputVal }];
     setTodos(newTodos);
-    setNewInputVal('');
+    setNewInputVal("");
+  };
+
+  const removeTodo = id => {
+    const newTodos = todos.filter(todo => todo.id !== id);
+    setTodos(newTodos);
   };
 
   return (
     <div>
       <ul>
-        {todos.map(({ label }) => (
-          <li key={label}>{label}</li>
+        {todos.map(({ label, id }) => (
+          <li onClick={() => removeTodo(id)} key={id}>
+            {label}
+          </li>
         ))}
       </ul>
       <div style={{ display: "flex" }}>
