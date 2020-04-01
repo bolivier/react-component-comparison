@@ -59,22 +59,39 @@ export class ClassVersion extends React.Component {
     });
   };
 
+  isCurrentlyVisible = todo => {
+    const { visibility } = this.props;
+    if (visibility === "all") {
+      return true;
+    }
+    if (visibility === "completed") {
+      return todo.completed;
+    }
+    if (visibility === "active") {
+      return !todo.completed;
+    }
+  };
+
   render() {
     return (
       <div>
         <ul>
-          {this.state.todos.map(({ label, id, completed }) => (
-            <li onClick={() => this.toggleCompleted(id)} key={id}>
-              <span
-                style={{ textDecoration: completed ? "line-through" : "none" }}
-              >
-                {label}
-              </span>
-              <button data-testid={id} onClick={(e) => this.removeTodo(id, e)}>
-                X
-              </button>
-            </li>
-          ))}
+          {this.state.todos
+            .filter(this.isCurrentlyVisible)
+            .map(({ label, id, completed }) => (
+              <li onClick={() => this.toggleCompleted(id)} key={id}>
+                <span
+                  style={{
+                    textDecoration: completed ? "line-through" : "none"
+                  }}
+                >
+                  {label}
+                </span>
+                <button data-testid={id} onClick={e => this.removeTodo(id, e)}>
+                  X
+                </button>
+              </li>
+            ))}
         </ul>
         <div style={{ display: "flex" }}>
           <label htmlFor="newInput">Todo label</label>

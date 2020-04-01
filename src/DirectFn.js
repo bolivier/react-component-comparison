@@ -11,7 +11,7 @@ function todoFactory(label) {
   };
 }
 
-export function DirectFn() {
+export function DirectFn({ visibility }) {
   const [todos, setTodos] = useState([]);
   const [newInputVal, setNewInputVal] = useState("");
 
@@ -49,21 +49,35 @@ export function DirectFn() {
     );
   };
 
+  const isCurrentlyVisible = todo => {
+    if (visibility === "all") {
+      return true;
+    }
+    if (visibility === "completed") {
+      return todo.completed;
+    }
+    if (visibility === "active") {
+      return !todo.completed;
+    }
+  };
+
   return (
     <div>
       <ul>
-        {todos.map(({ label, id, completed }) => (
-          <li onClick={() => toggleCompleted(id)} key={id}>
-            <span
-              style={{ textDecoration: completed ? "line-through" : "none" }}
-            >
-              {label}
-            </span>
-            <button data-testid={id} onClick={(e) => removeTodo(id, e)}>
-              X
-            </button>
-          </li>
-        ))}
+        {todos
+          .filter(this.isCurrentlyVisible)
+          .map(({ label, id, completed }) => (
+            <li onClick={() => toggleCompleted(id)} key={id}>
+              <span
+                style={{ textDecoration: completed ? "line-through" : "none" }}
+              >
+                {label}
+              </span>
+              <button data-testid={id} onClick={e => removeTodo(id, e)}>
+                X
+              </button>
+            </li>
+          ))}
       </ul>
       <div style={{ display: "flex" }}>
         <label htmlFor="newInput">Todo label</label>

@@ -1,5 +1,5 @@
-import React, { useState, useReducer, useEffect } from "react";
-import { initialState as initialTodos, getInitialState } from "./initialState";
+import React, { useReducer, useEffect, useMemo } from "react";
+import { getInitialState } from "./initialState";
 
 const initialState = {
   todos: [],
@@ -7,20 +7,21 @@ const initialState = {
   nextId: 3
 };
 
-export function IdiomaticFn() {
-  const [{ todos, inputVal }, dispatch] = useTodos();
+export function IdiomaticFn({ visibility = 'all' }) {
+  const [{ inputVal, visibleTodos }, dispatch] = useTodos(visibility);
 
   return (
     <div>
       <ul>
-        {todos.map(({ label, id, completed }) => (
+        {visibleTodos.map(({ label, id, completed }) => (
           <li
             onClick={() =>
               dispatch({ type: "todo/toggle-completed", payload: id })
             }
             key={id}
           >
-            style={{ textDecoration: completed ? "line-through" : "none" }}
+            <span
+              style={{ textDecoration: completed ? "line-through" : "none" }}
             >
               {label}
             </span>
@@ -61,7 +62,7 @@ export function IdiomaticFn() {
 }
 
 function todoReducer(state, { type, payload }) {
-  const { todos, inputVal, nextId } = state;
+  const { todos, nextId } = state;
 
   switch (type) {
     case "todo/add":
@@ -95,7 +96,7 @@ function todoReducer(state, { type, payload }) {
   }
 }
 
-function useTodos() {
+function useTodos(visibility) {
   const [state, dispatch] = useReducer(todoReducer, initialState);
 
   useEffect(() => {
@@ -107,13 +108,27 @@ function useTodos() {
     });
   }, []);
 
-  return [state, dispatch];
+  const visibleTodos = getVisibleTodos(state.todos, visibility);
+
+  return [{ ...state, visibleTodos }, dispatch];
+}
+
+function getVisibleTodos(todos, visibility) {
+  switch (visibility) {
+    case "active":
+      return todos.filter(({ completed }) => !completed);
+    case "completed":
+      return todos.filter(({ completed }) => completed);
+    case "all":
+    default:
+      return todos;
+  }
 }
 
 const neutralizeEvent = f => {
-    return e => {
-      e.preventDefault();
-      e.stopPropagation();
-      f();
-    };
+  return e => {
+    e.preventDefault();
+    e.stopPropagation();
+    f();
   };
+};
