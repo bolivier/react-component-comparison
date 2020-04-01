@@ -1,8 +1,27 @@
 import React from "react";
 import { initialState } from "./initialState";
 
+class TodoFactory {
+  constructor() {
+    this.nextId = 3;
+  }
+
+  todo(label) {
+    const id = this.nextId;
+    this.nextId = this.nextId + 1;
+    return {
+      id,
+      label
+    }
+  }
+}
+
 export class ClassVersion extends React.Component {
-  state = { todos: initialState, newInputVal: "" };
+  constructor(props) {
+    super(props);
+    this.todoFactory = new TodoFactory();
+    this.state = { todos: initialState, newInputVal: "" };
+  }
 
   onChangeNewInputVal = e => {
     e.preventDefault();
@@ -11,7 +30,8 @@ export class ClassVersion extends React.Component {
 
   addNewTodo = e => {
     e.preventDefault();
-    const newTodos = [...this.state.todos, { label: this.state.newInputVal }];
+    const todo = this.todoFactory.todo(this.state.newInputVal)
+    const newTodos = [...this.state.todos, todo];
     this.setState({
       todos: newTodos,
       newInputVal: ""

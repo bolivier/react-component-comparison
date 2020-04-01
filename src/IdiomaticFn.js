@@ -3,7 +3,8 @@ import { initialState as initialTodos } from "./initialState";
 
 const initialState = {
   todos: initialTodos,
-  inputVal: ""
+  inputVal: "",
+  nextId: 3
 };
 
 export function IdiomaticFn() {
@@ -47,13 +48,18 @@ export function IdiomaticFn() {
 }
 
 function todoReducer(state, { type, payload }) {
-  const { todos, inputVal } = state;
+  const { todos, inputVal, nextId } = state;
 
   switch (type) {
     case "todo/add":
-      return { ...state, todos: [...todos, { label: payload }], inputVal: "" };
+      return {
+        ...state,
+        todos: [...todos, { label: payload, id: nextId }],
+        inputVal: "",
+        nextId: nextId + 1
+      };
     case "todo/remove":
-      return { ...state, todos: [todos.filter(todo => todo.id !== payload)] };
+      return { ...state, todos: todos.filter(todo => todo.id !== payload) };
     case "input-change":
       return {
         ...state,

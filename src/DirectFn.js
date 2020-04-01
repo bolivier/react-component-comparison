@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import { initialState } from "./initialState";
 
+let nextId = 3;
+function todoFactory(label) {
+  const id = nextId;
+  nextId += 1;
+  return {
+    label,
+    id
+  };
+}
+
 export function DirectFn() {
   const [todos, setTodos] = useState(initialState);
   const [newInputVal, setNewInputVal] = useState("");
@@ -12,7 +22,8 @@ export function DirectFn() {
 
   const addNewTodo = e => {
     e.preventDefault();
-    const newTodos = [...todos, { label: newInputVal }];
+    const todo = todoFactory(newInputVal);
+    const newTodos = [...todos, todo];
     setTodos(newTodos);
     setNewInputVal("");
   };
