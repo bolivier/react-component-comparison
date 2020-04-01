@@ -1,14 +1,14 @@
-import React, { useState, useReducer } from "react";
-import { initialState as initialTodos } from "./initialState";
+import React, { useState, useReducer, useEffect } from "react";
+import { initialState as initialTodos, getInitialState } from "./initialState";
 
 const initialState = {
-  todos: initialTodos,
+  todos: [],
   inputVal: "",
   nextId: 3
 };
 
 export function IdiomaticFn() {
-  const [{ todos, inputVal }, dispatch] = useReducer(todoReducer, initialState);
+  const [{ todos, inputVal }, dispatch] = useTodos();
 
   return (
     <div>
@@ -58,6 +58,11 @@ function todoReducer(state, { type, payload }) {
         inputVal: "",
         nextId: nextId + 1
       };
+    case "todo/set":
+      return {
+        ...state,
+        todos: payload
+      };
     case "todo/remove":
       return { ...state, todos: todos.filter(todo => todo.id !== payload) };
     case "input-change":
@@ -69,3 +74,18 @@ function todoReducer(state, { type, payload }) {
       return state;
   }
 }
+
+function useTodos() {
+    const [state, dispatch] = useReducer(todoReducer, initialState);
+
+    useEffect(() => {
+      getInitialState().then(todos => {
+        dispatch({
+          type: "todo/set",
+          payload: todos
+        });
+      });
+    }, []);
+
+    return [state, dispatch];
+  }

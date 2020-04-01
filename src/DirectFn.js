@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { initialState } from "./initialState";
+import React, { useState, useEffect } from "react";
+import { getInitialState } from "./initialState";
 
 let nextId = 3;
 function todoFactory(label) {
@@ -12,8 +12,14 @@ function todoFactory(label) {
 }
 
 export function DirectFn() {
-  const [todos, setTodos] = useState(initialState);
+  const [todos, setTodos] = useState([]);
   const [newInputVal, setNewInputVal] = useState("");
+
+  useEffect(() => {
+    getInitialState().then(todos => {
+      setTodos(todos);
+    });
+  }, []);
 
   const onChangeNewInputVal = e => {
     e.preventDefault();

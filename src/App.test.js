@@ -7,9 +7,11 @@ import { render, getByLabelText, fireEvent, wait } from "@testing-library/react"
 describe("Todo component tests", () => {
   [ClassVersion, DirectFn, IdiomaticFn].map(Todo => {
     describe(`Testing: ${Todo.name}`, () => {
-      it("should show a list of (default) todos", () => {
-        const { getByText } = render(<Todo />);
-        expect(getByText(/get some milk/i)).toBeInTheDocument();
+      it("should show a list of (default) todos", async () => {
+        const { queryByText } = render(<Todo />);
+        expect(queryByText(/get some milk/i)).not.toBeInTheDocument();
+        await wait();
+        expect(queryByText(/get some milk/i)).toBeInTheDocument();
       });
 
       it("should show an add todos button with a working input", () => {
@@ -24,6 +26,7 @@ describe("Todo component tests", () => {
 
       it("should be able to delete todos", async () => {
         const { queryByText, getByText, getByLabelText } = render(<Todo />);
+        await wait();
         fireEvent.click(queryByText(/get some milk/i));
         expect(queryByText(/get some milk/i)).not.toBeInTheDocument();
 

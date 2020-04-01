@@ -1,5 +1,5 @@
 import React from "react";
-import { initialState } from "./initialState";
+import { initialState, getInitialState } from "./initialState";
 
 class TodoFactory {
   constructor() {
@@ -12,7 +12,7 @@ class TodoFactory {
     return {
       id,
       label
-    }
+    };
   }
 }
 
@@ -20,7 +20,13 @@ export class ClassVersion extends React.Component {
   constructor(props) {
     super(props);
     this.todoFactory = new TodoFactory();
-    this.state = { todos: initialState, newInputVal: "" };
+    this.state = { todos: [], newInputVal: "" };
+  }
+
+  componentDidMount() {
+    getInitialState().then(todos => {
+      this.setState({ todos });
+    });
   }
 
   onChangeNewInputVal = e => {
@@ -30,7 +36,7 @@ export class ClassVersion extends React.Component {
 
   addNewTodo = e => {
     e.preventDefault();
-    const todo = this.todoFactory.todo(this.state.newInputVal)
+    const todo = this.todoFactory.todo(this.state.newInputVal);
     const newTodos = [...this.state.todos, todo];
     this.setState({
       todos: newTodos,
