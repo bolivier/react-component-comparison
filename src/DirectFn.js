@@ -45,6 +45,9 @@ export function DirectFn() {
         {todos.map(({ label, id }) => (
           <li onClick={() => removeTodo(id)} key={id}>
             {label}
+            <button data-testid={id} onClick={() => removeTodo(id)}>
+              X
+            </button>
           </li>
         ))}
       </ul>

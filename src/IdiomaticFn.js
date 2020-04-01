@@ -14,11 +14,14 @@ export function IdiomaticFn() {
     <div>
       <ul>
         {todos.map(({ label, id }) => (
-          <li
-            onClick={() => dispatch({ type: "todo/remove", payload: id })}
-            key={id}
-          >
+          <li key={id}>
             {label}
+            <button
+              data-testid={id}
+              onClick={() => dispatch({ type: "todo/remove", payload: id })}
+            >
+              X
+            </button>
           </li>
         ))}
       </ul>
@@ -76,16 +79,16 @@ function todoReducer(state, { type, payload }) {
 }
 
 function useTodos() {
-    const [state, dispatch] = useReducer(todoReducer, initialState);
+  const [state, dispatch] = useReducer(todoReducer, initialState);
 
-    useEffect(() => {
-      getInitialState().then(todos => {
-        dispatch({
-          type: "todo/set",
-          payload: todos
-        });
+  useEffect(() => {
+    getInitialState().then(todos => {
+      dispatch({
+        type: "todo/set",
+        payload: todos
       });
-    }, []);
+    });
+  }, []);
 
-    return [state, dispatch];
-  }
+  return [state, dispatch];
+}

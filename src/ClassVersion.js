@@ -54,8 +54,11 @@ export class ClassVersion extends React.Component {
       <div>
         <ul>
           {this.state.todos.map(({ label, id }) => (
-            <li onClick={() => this.removeTodo(id)} key={id}>
+            <li key={id}>
               {label}
+              <button data-testid={id} onClick={() => this.removeTodo(id)}>
+                X
+              </button>
             </li>
           ))}
         </ul>
