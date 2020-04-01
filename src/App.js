@@ -1,12 +1,13 @@
 import React from "react";
 import { ClassVersion } from "./ClassVersion";
 import { DirectFn } from './DirectFn';
+import { IdiomaticFn } from './IdiomaticFn';
 
 
 const components = {
   CLASS: ClassVersion,
   DIRECT_FN: DirectFn,
-  IDIOMATIC_FN: () => <span>not implemented</span>
+  IDIOMATIC_FN: IdiomaticFn
 };
 
 function App() {
