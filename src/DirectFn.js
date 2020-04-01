@@ -34,18 +34,32 @@ export function DirectFn() {
     setNewInputVal("");
   };
 
-  const removeTodo = id => {
+  const removeTodo = (id, e) => {
+    e.preventDefault();
+    e.stopPropagation();
     const newTodos = todos.filter(todo => todo.id !== id);
     setTodos(newTodos);
+  };
+
+  const toggleCompleted = id => {
+    setTodos(
+      todos.map(todo =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
   };
 
   return (
     <div>
       <ul>
-        {todos.map(({ label, id }) => (
-          <li onClick={() => removeTodo(id)} key={id}>
-            {label}
-            <button data-testid={id} onClick={() => removeTodo(id)}>
+        {todos.map(({ label, id, completed }) => (
+          <li onClick={() => toggleCompleted(id)} key={id}>
+            <span
+              style={{ textDecoration: completed ? "line-through" : "none" }}
+            >
+              {label}
+            </span>
+            <button data-testid={id} onClick={(e) => removeTodo(id, e)}>
               X
             </button>
           </li>

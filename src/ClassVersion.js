@@ -44,19 +44,33 @@ export class ClassVersion extends React.Component {
     });
   };
 
-  removeTodo = id => {
+  removeTodo = (id, e) => {
+    e.preventDefault();
+    e.stopPropagation();
     const newTodos = this.state.todos.filter(todo => todo.id !== id);
     this.setState({ todos: newTodos });
+  };
+
+  toggleCompleted = id => {
+    this.setState({
+      todos: this.state.todos.map(todo =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    });
   };
 
   render() {
     return (
       <div>
         <ul>
-          {this.state.todos.map(({ label, id }) => (
-            <li key={id}>
-              {label}
-              <button data-testid={id} onClick={() => this.removeTodo(id)}>
+          {this.state.todos.map(({ label, id, completed }) => (
+            <li onClick={() => this.toggleCompleted(id)} key={id}>
+              <span
+                style={{ textDecoration: completed ? "line-through" : "none" }}
+              >
+                {label}
+              </span>
+              <button data-testid={id} onClick={(e) => this.removeTodo(id, e)}>
                 X
               </button>
             </li>

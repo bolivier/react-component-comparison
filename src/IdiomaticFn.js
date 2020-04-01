@@ -13,12 +13,20 @@ export function IdiomaticFn() {
   return (
     <div>
       <ul>
-        {todos.map(({ label, id }) => (
-          <li key={id}>
-            {label}
+        {todos.map(({ label, id, completed }) => (
+          <li
+            onClick={() =>
+              dispatch({ type: "todo/toggle-completed", payload: id })
+            }
+            key={id}
+          >
+            style={{ textDecoration: completed ? "line-through" : "none" }}
+            <span>{label}</span>
             <button
               data-testid={id}
-              onClick={() => dispatch({ type: "todo/remove", payload: id })}
+              onClick={neutralizeEvent(() => {
+                dispatch({ type: "todo/remove", payload: id });
+              })}
             >
               X
             </button>
@@ -73,6 +81,13 @@ function todoReducer(state, { type, payload }) {
         ...state,
         inputVal: payload
       };
+    case "todo/toggle-completed":
+      return {
+        ...state,
+        todos: todos.map(todo =>
+          todo.id === payload ? { ...todo, completed: !todo.completed } : todo
+        )
+      };
     default:
       return state;
   }
@@ -92,3 +107,11 @@ function useTodos() {
 
   return [state, dispatch];
 }
+
+const neutralizeEvent = f => {
+    return e => {
+      e.preventDefault();
+      e.stopPropagation();
+      f();
+    };
+  };
