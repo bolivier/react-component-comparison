@@ -25,3 +25,11 @@
 .danger:hover {
   @apply bg-red-700;
 }
+
+ul {
+  @apply m-5;
+}
+
+li {
+  @apply list-disc;
+}
