@@ -78,15 +78,11 @@ export class ClassVersion extends React.Component {
   render() {
     return (
       <div>
-        <ul className="m-5">
+        <ul>
           {this.state.todos
             .filter(this.isCurrentlyVisible)
             .map(({ label, id, completed }) => (
-              <li
-                className="list-disc"
-                onClick={() => this.toggleCompleted(id)}
-                key={id}
-              >
+              <li onClick={() => this.toggleCompleted(id)} key={id}>
                 <div
                   className="cursor-pointer"
                   style={{
