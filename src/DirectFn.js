@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { getInitialState } from "./initialState";
+import { initialState, getInitialState } from "./initialState";
 
 let nextId = 3;
 function todoFactory(label) {
   const id = nextId;
   nextId += 1;
   return {
+    id,
     label,
-    id
   };
 }
 
@@ -34,11 +34,8 @@ export function DirectFn({ visibility }) {
     setNewInputVal("");
   };
 
-  const removeTodo = (id, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const newTodos = todos.filter(todo => todo.id !== id);
-    setTodos(newTodos);
+  const removeCompleted = () => {
+    setTodos(todos.filter(({ completed }) => !completed));
   };
 
   const toggleCompleted = id => {
@@ -64,32 +61,40 @@ export function DirectFn({ visibility }) {
   return (
     <div>
       <ul>
-        {todos
-          .filter(this.isCurrentlyVisible)
-          .map(({ label, id, completed }) => (
-            <li onClick={() => toggleCompleted(id)} key={id}>
-              <span
-                style={{ textDecoration: completed ? "line-through" : "none" }}
-              >
-                {label}
-              </span>
-              <button data-testid={id} onClick={e => removeTodo(id, e)}>
-                X
-              </button>
-            </li>
-          ))}
+        {todos.filter(isCurrentlyVisible).map(({ label, id, completed }) => (
+          <li onClick={() => toggleCompleted(id)} key={id}>
+            <div
+              className="cursor-pointer"
+              style={{
+                textDecoration: completed ? "line-through" : "none",
+              }}
+            >
+              {label}
+            </div>
+          </li>
+        ))}
       </ul>
       <div style={{ display: "flex" }}>
-        <label htmlFor="newInput">Todo label</label>
-
+        <label className="hidden" htmlFor="newInput">
+          Todo label
+        </label>
         <input
           id="newInput"
+          className="border rounded p-2 mr-2"
           placeholder="label"
           value={newInputVal}
           onChange={onChangeNewInputVal}
         />
-        <button onClick={addNewTodo}>add todo</button>
+        <button className="btn" onClick={addNewTodo}>
+          add todo
+        </button>
       </div>
+      <button className="btn danger mt-2" onClick={removeCompleted}>
+        remove completed
+      </button>
     </div>
   );
 }
+DirectFn.defaultProps = {
+  visibility: "all",
+};
