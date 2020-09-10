@@ -7,3 +7,5 @@ I have 3.
 3. The function component created with
 
 The sample app is a boring todo list example
+
+![sample image of todo app](./app-image.png)
