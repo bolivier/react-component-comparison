@@ -11,12 +11,16 @@ class TodoFactory {
     this.nextId = this.nextId + 1;
     return {
       id,
-      label
+      label,
     };
   }
 }
 
 export class ClassVersion extends React.Component {
+  static defaultProps = {
+    visibility: "all",
+  };
+
   constructor(props) {
     super(props);
     this.todoFactory = new TodoFactory();
@@ -24,42 +28,41 @@ export class ClassVersion extends React.Component {
   }
 
   componentDidMount() {
-    getInitialState().then(todos => {
+    getInitialState().then((todos) => {
       this.setState({ todos });
     });
   }
 
-  onChangeNewInputVal = e => {
+  onChangeNewInputVal = (e) => {
     e.preventDefault();
     this.setState({ newInputVal: e.target.value });
   };
 
-  addNewTodo = e => {
+  addNewTodo = (e) => {
     e.preventDefault();
     const todo = this.todoFactory.todo(this.state.newInputVal);
     const newTodos = [...this.state.todos, todo];
     this.setState({
       todos: newTodos,
-      newInputVal: ""
+      newInputVal: "",
     });
   };
 
-  removeTodo = (id, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const newTodos = this.state.todos.filter(todo => todo.id !== id);
-    this.setState({ todos: newTodos });
-  };
-
-  toggleCompleted = id => {
+  removeCompleted = () => {
     this.setState({
-      todos: this.state.todos.map(todo =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
+      todos: this.state.todos.filter(({ completed }) => !completed),
     });
   };
 
-  isCurrentlyVisible = todo => {
+  toggleCompleted = (id) => {
+    this.setState({
+      todos: this.state.todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      ),
+    });
+  };
+
+  isCurrentlyVisible = (todo) => {
     const { visibility } = this.props;
     if (visibility === "all") {
       return true;
@@ -75,34 +78,44 @@ export class ClassVersion extends React.Component {
   render() {
     return (
       <div>
-        <ul>
+        <ul className="m-5">
           {this.state.todos
             .filter(this.isCurrentlyVisible)
             .map(({ label, id, completed }) => (
-              <li onClick={() => this.toggleCompleted(id)} key={id}>
-                <span
+              <li
+                className="list-disc"
+                onClick={() => this.toggleCompleted(id)}
+                key={id}
+              >
+                <div
+                  className="cursor-pointer"
                   style={{
-                    textDecoration: completed ? "line-through" : "none"
+                    textDecoration: completed ? "line-through" : "none",
                   }}
                 >
                   {label}
-                </span>
-                <button data-testid={id} onClick={e => this.removeTodo(id, e)}>
-                  X
-                </button>
+                </div>
               </li>
             ))}
         </ul>
         <div style={{ display: "flex" }}>
-          <label htmlFor="newInput">Todo label</label>
+          <label className="hidden" htmlFor="newInput">
+            Todo label
+          </label>
           <input
             id="newInput"
+            className="border rounded p-2 mr-2"
             placeholder="label"
             value={this.state.newInputVal}
             onChange={this.onChangeNewInputVal}
           />
-          <button onClick={this.addNewTodo}>add todo</button>
+          <button className="btn" onClick={this.addNewTodo}>
+            add todo
+          </button>
         </div>
+        <button className="btn danger mt-2" onClick={this.removeCompleted}>
+          remove completed
+        </button>
       </div>
     );
   }
