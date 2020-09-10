@@ -4,10 +4,10 @@ import { getInitialState } from "./initialState";
 const initialState = {
   todos: [],
   inputVal: "",
-  nextId: 3
+  nextId: 3,
 };
 
-export function IdiomaticFn({ visibility = 'all' }) {
+export function IdiomaticFn({ visibility = "all" }) {
   const [{ inputVal, visibleTodos }, dispatch] = useTodos(visibility);
 
   return (
@@ -20,26 +20,24 @@ export function IdiomaticFn({ visibility = 'all' }) {
             }
             key={id}
           >
-            <span
-              style={{ textDecoration: completed ? "line-through" : "none" }}
+            <div
+              className="cursor-pointer"
+              style={{
+                textDecoration: completed ? "line-through" : "none",
+              }}
             >
               {label}
-            </span>
-            <button
-              data-testid={id}
-              onClick={neutralizeEvent(() => {
-                dispatch({ type: "todo/remove", payload: id });
-              })}
-            >
-              X
-            </button>
+            </div>
           </li>
         ))}
       </ul>
       <div style={{ display: "flex" }}>
-        <label htmlFor="newInput">Todo label</label>
+        <label className="hidden" htmlFor="newInput">
+          Todo label
+        </label>
         <input
           id="newInput"
+          className="border rounded p-2 mr-2"
           placeholder="label"
           value={inputVal}
           onChange={e =>
@@ -47,16 +45,25 @@ export function IdiomaticFn({ visibility = 'all' }) {
           }
         />
         <button
+          className="btn"
           onClick={() =>
             dispatch({
               type: "todo/add",
-              payload: inputVal
+              payload: inputVal,
             })
           }
         >
           add todo
         </button>
       </div>
+      <button
+        className="btn danger mt-2"
+        onClick={() => {
+          dispatch({ type: "todo/clean" });
+        }}
+      >
+        remove completed
+      </button>
     </div>
   );
 }
@@ -70,26 +77,29 @@ function todoReducer(state, { type, payload }) {
         ...state,
         todos: [...todos, { label: payload, id: nextId }],
         inputVal: "",
-        nextId: nextId + 1
+        nextId: nextId + 1,
       };
     case "todo/set":
       return {
         ...state,
-        todos: payload
+        todos: payload,
       };
-    case "todo/remove":
-      return { ...state, todos: todos.filter(todo => todo.id !== payload) };
+    case "todo/clean":
+      return {
+        ...state,
+        todos: todos.filter(({ completed }) => !completed),
+      };
     case "input-change":
       return {
         ...state,
-        inputVal: payload
+        inputVal: payload,
       };
     case "todo/toggle-completed":
       return {
         ...state,
         todos: todos.map(todo =>
           todo.id === payload ? { ...todo, completed: !todo.completed } : todo
-        )
+        ),
       };
     default:
       return state;
@@ -103,7 +113,7 @@ function useTodos(visibility) {
     getInitialState().then(todos => {
       dispatch({
         type: "todo/set",
-        payload: todos
+        payload: todos,
       });
     });
   }, []);
@@ -124,11 +134,3 @@ function getVisibleTodos(todos, visibility) {
       return todos;
   }
 }
-
-const neutralizeEvent = f => {
-  return e => {
-    e.preventDefault();
-    e.stopPropagation();
-    f();
-  };
-};

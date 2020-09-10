@@ -11,7 +11,7 @@ import {
 } from "@testing-library/react";
 
 describe("Todo component tests", () => {
-  [ClassVersion /*DirectFn, IdiomaticFn*/].map((Todo) => {
+  [ClassVersion, DirectFn, IdiomaticFn].map(Todo => {
     describe(`Testing: ${Todo.name}`, () => {
       it("should show a list of (default) todos", async () => {
         render(<Todo />);
