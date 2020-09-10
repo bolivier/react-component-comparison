@@ -2,6 +2,8 @@
 
 src/notes.md
 
+src/tailwind.output.css
+
 # dependencies
 /node_modules
 /.pnp
