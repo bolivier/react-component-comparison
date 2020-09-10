@@ -28,17 +28,17 @@ export class ClassVersion extends React.Component {
   }
 
   componentDidMount() {
-    getInitialState().then((todos) => {
+    getInitialState().then(todos => {
       this.setState({ todos });
     });
   }
 
-  onChangeNewInputVal = (e) => {
+  onChangeNewInputVal = e => {
     e.preventDefault();
     this.setState({ newInputVal: e.target.value });
   };
 
-  addNewTodo = (e) => {
+  addNewTodo = e => {
     e.preventDefault();
     const todo = this.todoFactory.todo(this.state.newInputVal);
     const newTodos = [...this.state.todos, todo];
@@ -54,15 +54,15 @@ export class ClassVersion extends React.Component {
     });
   };
 
-  toggleCompleted = (id) => {
+  toggleCompleted = id => {
     this.setState({
-      todos: this.state.todos.map((todo) =>
+      todos: this.state.todos.map(todo =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
       ),
     });
   };
 
-  isCurrentlyVisible = (todo) => {
+  isCurrentlyVisible = todo => {
     const { visibility } = this.props;
     if (visibility === "all") {
       return true;
